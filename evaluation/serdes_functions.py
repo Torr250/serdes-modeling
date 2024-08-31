@@ -220,11 +220,11 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     ir = sp.io.loadmat(ir_channel_file)
     ir = ir['ir']
     ir=ir[:,0]
-    ir_t =  np.arange(1,len(ir)+1,1)*t_d*1e9
+    #ir_t =  np.arange(1,len(ir)+1,1)*t_d*1e9
     
     #Frequency response
     ch1 = sp.fft.fft(ir)
-    ch1_20dB = 20*np.log10(np.abs(ch1))
+    #ch1_20dB = 20*np.log10(np.abs(ch1))
     ch1_freqs=(1/(t_d*len(ch1)))*(np.arange(1,len(ir)+1,1))*1e-9
     
     #Ideal pulse data
@@ -247,7 +247,7 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     ctle_Aac = 10**(ctle_AacdB/20);
     ctle_peaking = ctle_Aac/ctle_Adc;
     ctle_fp1 = ctle_peaking*ctle_fz0;
-    ctle_gbw = ctle_Adc*2*np.pi*ctle_fp2;
+    #ctle_gbw = ctle_Adc*2*np.pi*ctle_fp2;
     
     ctle_wz0 = 2*np.pi*ctle_fz0;
     ctle_wp1 = 2*np.pi*ctle_fp1;
