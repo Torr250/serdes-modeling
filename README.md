@@ -15,7 +15,9 @@ Evaluates Worst Case Eye Height for a SerDes system based on the channel, equali
 
 Descipcion de la funcion
 
+```
 serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list, eyediagram_plot, wc_eyeh_print)
+
 datarate: velocidad de transmision
 ir_channel_file: respuesta al impulso del canal, archivo .mat
 tx_ffe_taps_list = lista de coeficientes para un equalizador de 3 taps [pre, main, post] donde main = 1 - pre + post, main se calcula automaticamente
@@ -23,6 +25,7 @@ rx_ctle_gain_list = Ganancia de baja y alta frecuencia del CTLE en voltaje [Adc,
 rx_dfe_taps_list = Lista de coeficientes del filtro DFE de 3 taps [tap1, tap2 tap3]
 eyediagram_plot = visualiza el diagrama de ojo de 1000 muestras aleatorias. "all" todos los filtros, "final" respuesta final, "not" ninguno
 wc_eyeh_print = imprime el resultado del ojo, "all" todos los filtros, "final" respuesta final, "not" ninguno
+```
 
  Ejemplo
 =========
