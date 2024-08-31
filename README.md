@@ -52,8 +52,9 @@ print('WC eye height: '+si_format(wceye)+'V')
 
  Dependencies
 =========
-Need to add si_prefix to print the eye height in scientific notation 
+Need to add serdes-py to process some data and si_prefix to print the eye height in scientific notation 
 ```
+pip install serdespy
 pip install si-prefix
 ```
 
