@@ -115,7 +115,7 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
     return WCEyeH
     
 
-def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list,eyediagram_plot,wc_eyeh_print):
+def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list,eyediagram_plot,wc_eyeh_print,pulse_plot):
     """Evaluates eye height from the input configuration
 
     Parameters
@@ -299,6 +299,24 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     #Pulse response Channel + FFE + CTLE + DFE
     pulse_response_fir_ctle_dfe=pulse_response_fir_ctle - pulse_dfe
     
+    
+    
+    #%% Pulse response plots
+    
+    if pulse_plot == 'all':
+        pulse_t =  np.arange(1,len(pulse_response)+1,1)*t_d*1e9
+        pulse_fir_t =  np.arange(1,len(pulse_response_fir)+1,1)*t_d*1e9
+        pulse_fir_ctle_t =  np.arange(1,len(pulse_response_fir_ctle)+1,1)*t_d*1e9
+        pulse_fir_ctle_dfe_t =  np.arange(1,len(pulse_response_fir_ctle_dfe)+1,1)*t_d*1e9
+        
+        sdp.channel_coefficients(pulse_response, pulse_t*1e-9, samples_per_symbol, 2, 5)
+        sdp.channel_coefficients(pulse_response_fir, pulse_fir_t*1e-9, samples_per_symbol, 2, 5)
+        sdp.channel_coefficients(pulse_response_fir_ctle, pulse_fir_ctle_t*1e-9, samples_per_symbol, 2, 5)
+        sdp.channel_coefficients(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
+    elif pulse_plot == 'final':
+        pulse_fir_ctle_dfe_t =  np.arange(1,len(pulse_response_fir_ctle_dfe)+1,1)*t_d*1e9
+        sdp.channel_coefficients(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
+    
     #%% WC eye height all filters
     
     WCEyeH_ch1 = sdf.wc_eyeheight(pulse_response, samples_per_symbol, 10, 100)
@@ -313,7 +331,6 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
         print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
     elif wc_eyeh_print == 'final':
         print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
-    
     
     #%% Eye Diagram all filters
     

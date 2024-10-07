@@ -13,7 +13,7 @@ SerdesPy
 si_prefix
     pip install si-prefix
 """
-
+import matplotlib.pyplot as plt
 import serdes_functions as sdf
 from si_prefix import si_format
 
@@ -28,7 +28,9 @@ rx_ctle_gain_list = [2,2] # CTLE -6dB and 6dB [2,2],Positive values only up to 2
 rx_dfe_taps_list = [-0.033 , -0.052, -0.015] #Random Taps, positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final, all, not
-
-wceye = sdf.serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list, eyediagram_plot, wc_eyeh_print)
+pulse_plot = 'all' #final, all, not
+wceye = sdf.serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list, eyediagram_plot, wc_eyeh_print,pulse_plot)
 
 print('WC eye height: '+si_format(wceye)+'V')
+
+plt.show()
