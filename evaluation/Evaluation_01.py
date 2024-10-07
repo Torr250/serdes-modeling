@@ -29,7 +29,9 @@ rx_dfe_taps_list = [-0.033 , -0.052, -0.015] #Random Taps, positive and negative
 eyediagram_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final, all, not
 pulse_plot = 'all' #final, all, not
-wceye = sdf.serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list, eyediagram_plot, wc_eyeh_print,pulse_plot)
+debug_print = 'yes'
+
+wceye = sdf.serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list, eyediagram_plot, wc_eyeh_print,pulse_plot,debug_print)
 
 print('WC eye height: '+si_format(wceye)+'V')
 

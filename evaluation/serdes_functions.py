@@ -11,6 +11,7 @@ import numpy as np
 import scipy as sp
 import serdes_functions as sdf
 from si_prefix import si_format
+from prettytable import PrettyTable
 
 def channel_coefficients(pulse_response, samples_per_symbol, n_precursors, n_postcursors):
     #TODO: check for not long enough signal
@@ -115,7 +116,7 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
     return WCEyeH
     
 
-def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list,eyediagram_plot,wc_eyeh_print,pulse_plot):
+def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_list, rx_dfe_taps_list,eyediagram_plot,wc_eyeh_print,pulse_plot, debug_print):
     """Evaluates eye height from the input configuration
 
     Parameters
@@ -299,10 +300,19 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     #Pulse response Channel + FFE + CTLE + DFE
     pulse_response_fir_ctle_dfe=pulse_response_fir_ctle - pulse_dfe
     
-    
-    
+    #%% Print in console debug info
+    if debug_print == 'yes':
+        print(str(tx_fir_tap_weights[0]))
+        myTable = PrettyTable(["Eq", "Tap1", "Tap2", "Tap3"]) 
+          
+        # Add rows 
+        myTable.add_row(["FFE", str(tx_fir_tap_weights[0]), str(tx_fir_tap_weights[1]), str(tx_fir_tap_weights[2])]) 
+        myTable.add_row(["CTLE", "DC: " + str(rx_ctle_gain_list[0]), "AC:" + str(rx_ctle_gain_list[1]),"-"]) 
+        myTable.add_row(["DFE", str(dfe_tap_weights[0]), str(dfe_tap_weights[1]), str(dfe_tap_weights[2])]) 
+          
+        print(myTable)
+        
     #%% Pulse response plots
-    
     if pulse_plot == 'all':
         pulse_t =  np.arange(1,len(pulse_response)+1,1)*t_d*1e9
         pulse_fir_t =  np.arange(1,len(pulse_response_fir)+1,1)*t_d*1e9
