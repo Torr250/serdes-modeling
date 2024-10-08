@@ -286,7 +286,7 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     #Pulse response Channel + FFE + CTLE
     pulse_response_fir_ctle = sp.signal.fftconvolve(pulse_response_fir, h_ctle, mode = "full")
     
-    #DFE definitions
+    #DFE definit ions
     max_idx = np.where(pulse_response_fir_ctle == np.amax(pulse_response_fir_ctle))[0][0]
     channel_coefficients = sdf.channel_coefficients(pulse_response_fir_ctle, samples_per_symbol, 3, 3)
     main_cursor = channel_coefficients[3]
@@ -298,7 +298,7 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     pulse_dfe[(max_idx+round(samples_per_symbol/2)):(max_idx+round(samples_per_symbol/2))+len(dfe_tap_samples)]=dfe_tap_samples
     
     #Pulse response Channel + FFE + CTLE + DFE
-    pulse_response_fir_ctle_dfe=pulse_response_fir_ctle - pulse_dfe
+    pulse_response_fir_ctle_dfe=pulse_response_fir_ctle + pulse_dfe
     
     #%% Print in console debug info
     if debug_print == 'yes':
@@ -378,11 +378,11 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
             sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE")
             
             RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
-            RX.nrz_DFE(dfe_tap_weights)
+            RX.nrz_DFE(-dfe_tap_weights)
             sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
         elif eyediagram_plot == 'final':
             RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
-            RX.nrz_DFE(dfe_tap_weights)
+            RX.nrz_DFE(-dfe_tap_weights)
             sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
     
     return WCEyeH_ch1_ffe_ctle_dfe
