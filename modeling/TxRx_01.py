@@ -19,6 +19,7 @@ import scipy as sp
 import serdes_functions as sdf
 from si_prefix import si_format
 from prettytable import PrettyTable
+import matplotlib.pyplot as plt
 
     
 
@@ -71,13 +72,13 @@ wc_eyeheight : float
 # Known values
 datarate = 8e9
 ir_channel_file = 'ir_B20.mat' 
-tx_ffe_taps_list = [0.000, 0.250] #PCIe P0, Autocalculates main tap, positive values only max value 0.4
-rx_ctle_gain_list = [2,2] # Positive values only up to 2
-rx_dfe_taps_list = [0.033 , 0.052, 0.015] #Random Taps, positive and negative values up to 0.5
+tx_ffe_taps_list = [0.0, 0.250] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
+rx_ctle_gain_list = [0,0] # Positive values only up to 6 [6,6]
+rx_dfe_taps_list = [0.0 , 0.0, 0.0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final or all, not
 pulse_plot = 'all' #final, all, not
-debug_print = 'not'
+debug_print = 'yes'
 
 #expected return value 0.3567443163177757
 
@@ -101,8 +102,10 @@ for x in range(len(rx_dfe_taps_list)):
 tx_ffe_main_tap = 1-(tx_ffe_taps_list[0] + tx_ffe_taps_list[1])
 tx_fir_tap_weights = np.array([-tx_ffe_taps_list[0],tx_ffe_main_tap,-tx_ffe_taps_list[1]])
 dfe_tap_weights = np.array(rx_dfe_taps_list) 
-ctle_AdcdB = -20*np.log10(rx_ctle_gain_list[0]);
-ctle_AacdB = 20*np.log10(rx_ctle_gain_list[1]);
+ctle_AdcdB = -rx_ctle_gain_list[0];
+ctle_AacdB = rx_ctle_gain_list[1];
+#ctle_AdcdB = -20*np.log10(rx_ctle_gain_list[0]);
+#ctle_AacdB = 20*np.log10(rx_ctle_gain_list[1]);
 
 #% Simulator Definitions
 #datarate
@@ -206,14 +209,10 @@ pulse_response_fir_ctle_dfe=pulse_response_fir_ctle + pulse_dfe
 
 #%% Print in console debug info
 if debug_print == 'yes':
-    print(str(tx_fir_tap_weights[0]))
-    myTable = PrettyTable(["Eq", "Tap1", "Tap2", "Tap3"]) 
-      
-    # Add rows 
+    myTable = PrettyTable(["Eq", "Tap1", "Tap2", "Tap3"])      
     myTable.add_row(["FFE", str(tx_fir_tap_weights[0]), str(tx_fir_tap_weights[1]), str(tx_fir_tap_weights[2])]) 
     myTable.add_row(["CTLE", "DC: " + str(rx_ctle_gain_list[0]), "AC:" + str(rx_ctle_gain_list[1]),"-"]) 
     myTable.add_row(["DFE", str(dfe_tap_weights[0]), str(dfe_tap_weights[1]), str(dfe_tap_weights[2])]) 
-      
     print(myTable)
     
 #%% Pulse response plots
@@ -237,31 +236,30 @@ WCEyeH_ch1 = sdf.wc_eyeheight(pulse_response, samples_per_symbol, 10, 100)
 WCEyeH_ch1_ffe = sdf.wc_eyeheight(pulse_response_fir, samples_per_symbol, 10, 100)
 WCEyeH_ch1_ffe_ctle = sdf.wc_eyeheight(pulse_response_fir_ctle, samples_per_symbol, 10, 100)
 
-#debug mode
+#For DFE filter, pre and main pulses are fixed, only post cursors are modified
 pulse_fir_ctle_t =  np.arange(1,len(pulse_response_fir_ctle)+1,1)*t_d*1e9
-#sdp.channel_coefficients(pulse_response_fir_ctle, pulse_fir_ctle_t*1e-9, samples_per_symbol, 2, 5)
 ch1_ffe_ctle_coeff = sdf.channel_coefficients(pulse_response_fir_ctle, samples_per_symbol, 10, 100)
 ch1_ffe_ctle_dfe_coeff = np.zeros(len(ch1_ffe_ctle_coeff))
 
 for x in range(len(dfe_tap_weights)):
     ch1_ffe_ctle_dfe_coeff[x] = dfe_tap_weights[x]
 
-ch1_ffe_ctle_dfe_coeff=np.roll(ch1_ffe_ctle_dfe_coeff,11)
-
-
+ch1_ffe_ctle_dfe_coeff = np.roll(ch1_ffe_ctle_dfe_coeff,11)
 ch1_ffe_ctle_dfe_coeff = ch1_ffe_ctle_dfe_coeff + ch1_ffe_ctle_coeff
 
 #WCEyeH_ch1_ffe_ctle_dfe = sdf.wc_eyeheight(pulse_response_fir_ctle_dfe, samples_per_symbol, 10, 100)
 WCEyeH_ch1_ffe_ctle_dfe = sdf.wc_eyeheight_coeff(ch1_ffe_ctle_dfe_coeff, samples_per_symbol, 10, 100)
 
-if wc_eyeh_print == 'all':
-    print('WC eye height Channel: '+si_format(WCEyeH_ch1)+'V')
-    print('WC eye height Ch+FFE: '+si_format(WCEyeH_ch1_ffe)+'V')
-    print('WC eye height Ch+FFE+CTLE: '+si_format(WCEyeH_ch1_ffe_ctle)+'V')
-    print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
-elif wc_eyeh_print == 'final':
-    print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
 
+if wc_eyeh_print == 'all':
+    myTable = PrettyTable([" ","Channel", "FFE", "CTLE", "DFE"])      
+    myTable.add_row(["WC Eye Height", si_format(WCEyeH_ch1)+'V', si_format(WCEyeH_ch1_ffe)+'V', si_format(WCEyeH_ch1_ffe_ctle)+'V',si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V'])
+    print(myTable)
+elif wc_eyeh_print == 'final':
+    myTable = PrettyTable([" ","Ch+FFE+CTLE+DFE"])      
+    myTable.add_row(["WC Eye Height",si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V']) 
+    print(myTable)
+    
 #%% Eye Diagram all filters
 
 if not(eyediagram_plot == 'not'):
@@ -304,3 +302,4 @@ if not(eyediagram_plot == 'not'):
         RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
         RX.nrz_DFE(-dfe_tap_weights)
         sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
+plt.show()

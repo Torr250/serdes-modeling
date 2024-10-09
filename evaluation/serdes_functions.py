@@ -90,9 +90,9 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
 
     """
     
-    ch1_coeff = channel_coefficients(pulse_response, samples_per_symbol, n_precursors+1, n_postcursors)
+    ch1_coeff = channel_coefficients(pulse_response, samples_per_symbol, n_precursors, n_postcursors)
 
-    pulse_peak = ch1_coeff[n_precursors+1]
+    pulse_peak = ch1_coeff[n_precursors]
     WC0 = 0
     WC1 = 0
 
@@ -103,10 +103,58 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
             WC0 = ch1_coeff[x] + WC0;
             
     for x in range(n_postcursors):
-        if ch1_coeff[n_precursors+2+x] < 0 :
-            WC1 = ch1_coeff[n_precursors+2+x] + WC1;
+        if ch1_coeff[n_precursors+1+x] < 0 :
+            WC1 = ch1_coeff[n_precursors+1+x] + WC1;
         else:
-            WC0 = ch1_coeff[n_precursors+2+x] + WC0;
+            WC0 = ch1_coeff[n_precursors+1+x] + WC0;
+            
+    WCEyeH = 2*(pulse_peak+WC1-WC0)
+
+    #print('WC0 (positive): '+si_format(WC0)+', WC1 (negative): '+si_format(WC1)+', Peak, : '+si_format(pulse_peak))
+    #print('WC eye height: '+si_format(WCEyeH))
+    
+    return WCEyeH
+    
+
+def wc_eyeheight_coeff(coeff, samples_per_symbol, n_precursors, n_postcursors):
+    """measures the worst case eye height using the coefficient method
+
+    Parameters
+    ----------
+    coeff: array
+        Only channel coefficients
+    
+    samples_per_symbol: int
+        number of samples per UI
+        
+    n_precursors : int
+        number of UI before main cursor to measure
+        
+    n_postcursors : int
+        number of UI before after cursor to measure
+        
+    Returns
+    -------
+    wc_eyeheight : int
+        worst case eye height in volts
+
+    """
+    
+    pulse_peak = coeff[n_precursors]
+    WC0 = 0
+    WC1 = 0
+
+    for x in range(n_precursors):
+        if coeff[x] < 0 :
+            WC1 = coeff[x] + WC1;
+        else:
+            WC0 = coeff[x] + WC0;
+            
+    for x in range(n_postcursors):
+        if coeff[n_precursors+1+x] < 0 :
+            WC1 = coeff[n_precursors+1+x] + WC1;
+        else:
+            WC0 = coeff[n_precursors+1+x] + WC0;
             
     WCEyeH = 2*(pulse_peak+WC1-WC0)
 
@@ -167,7 +215,7 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     #datarate = 8e9
     #ir_channel_file = 'ir_B20.mat' 
     #tx_ffe_taps_list = [0.000, 0.250] #PCIe P0, Autocalculates main tap, positive values only max value 0.4
-    #rx_ctle_gain_list = [2,2] # Positive values only up to 2
+    #rx_ctle_gain_list = [6,6] # Positive values only up to 6, in dB
     #rx_dfe_taps_list = [-0.033 , -0.052, -0.015] #Random Taps, positive and negative values up to 0.5
     #eyediagram_plot = 'not' # final, all, not
     #wc_eyeh_print = 'not' #final or all, not
@@ -183,7 +231,7 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
             return -1
       
     for x in range(len(rx_ctle_gain_list)):
-        if not( 0 <= rx_ctle_gain_list[x] <= 2 ):
+        if not( 0 <= rx_ctle_gain_list[x] <= 6 ):
             print('Not correct CTLE values')
             return -1
     
@@ -197,8 +245,8 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     tx_ffe_main_tap = 1-(tx_ffe_taps_list[0] + tx_ffe_taps_list[1])
     tx_fir_tap_weights = np.array([-tx_ffe_taps_list[0],tx_ffe_main_tap,-tx_ffe_taps_list[1]])
     dfe_tap_weights = np.array(rx_dfe_taps_list) 
-    ctle_AdcdB = -20*np.log10(rx_ctle_gain_list[0]);
-    ctle_AacdB = 20*np.log10(rx_ctle_gain_list[1]);
+    ctle_AdcdB = -rx_ctle_gain_list[0];
+    ctle_AacdB = rx_ctle_gain_list[1];
     
     #% Simulator Definitions
     #datarate
@@ -302,7 +350,6 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     
     #%% Print in console debug info
     if debug_print == 'yes':
-        print(str(tx_fir_tap_weights[0]))
         myTable = PrettyTable(["Eq", "Tap1", "Tap2", "Tap3"]) 
           
         # Add rows 
@@ -332,15 +379,31 @@ def serdes_evaluation(datarate, ir_channel_file, tx_ffe_taps_list, rx_ctle_gain_
     WCEyeH_ch1 = sdf.wc_eyeheight(pulse_response, samples_per_symbol, 10, 100)
     WCEyeH_ch1_ffe = sdf.wc_eyeheight(pulse_response_fir, samples_per_symbol, 10, 100)
     WCEyeH_ch1_ffe_ctle = sdf.wc_eyeheight(pulse_response_fir_ctle, samples_per_symbol, 10, 100)
-    WCEyeH_ch1_ffe_ctle_dfe = sdf.wc_eyeheight(pulse_response_fir_ctle_dfe, samples_per_symbol, 10, 100)
+    
+    #For DFE filter, pre and main pulses are fixed, only post cursors are modified
+    pulse_fir_ctle_t =  np.arange(1,len(pulse_response_fir_ctle)+1,1)*t_d*1e9
+    #sdp.channel_coefficients(pulse_response_fir_ctle, pulse_fir_ctle_t*1e-9, samples_per_symbol, 2, 5)
+    ch1_ffe_ctle_coeff = sdf.channel_coefficients(pulse_response_fir_ctle, samples_per_symbol, 10, 100)
+    ch1_ffe_ctle_dfe_coeff = np.zeros(len(ch1_ffe_ctle_coeff))
+    
+    for x in range(len(dfe_tap_weights)):
+        ch1_ffe_ctle_dfe_coeff[x] = dfe_tap_weights[x]
+    
+    ch1_ffe_ctle_dfe_coeff = np.roll(ch1_ffe_ctle_dfe_coeff,11)
+    ch1_ffe_ctle_dfe_coeff = ch1_ffe_ctle_dfe_coeff + ch1_ffe_ctle_coeff
+    
+    #WCEyeH_ch1_ffe_ctle_dfe = sdf.wc_eyeheight(pulse_response_fir_ctle_dfe, samples_per_symbol, 10, 100)
+    WCEyeH_ch1_ffe_ctle_dfe = sdf.wc_eyeheight_coeff(ch1_ffe_ctle_dfe_coeff, samples_per_symbol, 10, 100)
+    
     
     if wc_eyeh_print == 'all':
-        print('WC eye height Channel: '+si_format(WCEyeH_ch1)+'V')
-        print('WC eye height Ch+FFE: '+si_format(WCEyeH_ch1_ffe)+'V')
-        print('WC eye height Ch+FFE+CTLE: '+si_format(WCEyeH_ch1_ffe_ctle)+'V')
-        print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
+        myTable = PrettyTable([" ","Channel", "FFE", "CTLE", "DFE"])      
+        myTable.add_row(["WC Eye Height", si_format(WCEyeH_ch1)+'V', si_format(WCEyeH_ch1_ffe)+'V', si_format(WCEyeH_ch1_ffe_ctle)+'V',si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V'])
+        print(myTable)
     elif wc_eyeh_print == 'final':
-        print('WC eye height Ch+FFE+CTLE+DFE: '+si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V')
+        myTable = PrettyTable([" ","Ch+FFE+CTLE+DFE"])      
+        myTable.add_row(["WC Eye Height",si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V']) 
+        print(myTable)
     
     #%% Eye Diagram all filters
     

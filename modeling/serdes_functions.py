@@ -90,9 +90,9 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
 
     """
     
-    ch1_coeff = channel_coefficients(pulse_response, samples_per_symbol, n_precursors+1, n_postcursors)
+    ch1_coeff = channel_coefficients(pulse_response, samples_per_symbol, n_precursors, n_postcursors)
 
-    pulse_peak = ch1_coeff[n_precursors+1]
+    pulse_peak = ch1_coeff[n_precursors]
     WC0 = 0
     WC1 = 0
 
@@ -103,10 +103,10 @@ def wc_eyeheight(pulse_response, samples_per_symbol, n_precursors, n_postcursors
             WC0 = ch1_coeff[x] + WC0;
             
     for x in range(n_postcursors):
-        if ch1_coeff[n_precursors+2+x] < 0 :
-            WC1 = ch1_coeff[n_precursors+2+x] + WC1;
+        if ch1_coeff[n_precursors+1+x] < 0 :
+            WC1 = ch1_coeff[n_precursors+1+x] + WC1;
         else:
-            WC0 = ch1_coeff[n_precursors+2+x] + WC0;
+            WC0 = ch1_coeff[n_precursors+1+x] + WC0;
             
     WCEyeH = 2*(pulse_peak+WC1-WC0)
 

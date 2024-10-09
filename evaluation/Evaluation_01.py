@@ -24,8 +24,8 @@ datarate = 8e9
 ir_channel_file = 'ir_B20.mat'  # ir_B12, ir_B20, ir_T20
 # If we set all the values to 0, the channel is not equalized
 tx_ffe_taps_list = [0.000, 0.250] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
-rx_ctle_gain_list = [2,2] # CTLE -6dB and 6dB [2,2],Positive values only up to 2
-rx_dfe_taps_list = [0.033 , 0.052, 0.015] #Random Taps, positive and negative values up to 0.5
+rx_ctle_gain_list = [0,0] # CTLE -6dB and 6dB [6,6],Positive values from 0 up to 6
+rx_dfe_taps_list = [0.0 , 0.0, 0.0] #Random Taps [0.033 , 0.052, 0.015] , positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final, all, not
 pulse_plot = 'all' #final, all, not
