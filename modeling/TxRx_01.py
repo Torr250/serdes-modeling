@@ -76,6 +76,7 @@ tx_ffe_taps_list = [0.0, 0.250] #PCIe P0 [0.000, 0.250], Autocalculates main tap
 rx_ctle_gain_list = [0,0] # Positive values only up to 6 [6,6]
 rx_dfe_taps_list = [0.0 , 0.0, 0.0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
+eyediagram_wc_plot = 'not' # final, all, not
 wc_eyeh_print = 'all' #final or all, not
 pulse_plot = 'all' #final, all, not
 debug_print = 'yes'
@@ -259,6 +260,51 @@ elif wc_eyeh_print == 'final':
     myTable = PrettyTable([" ","Ch+FFE+CTLE+DFE"])      
     myTable.add_row(["WC Eye Height",si_format(WCEyeH_ch1_ffe_ctle_dfe)+'V']) 
     print(myTable)
+    
+    
+#%% WC Data Pattern (need to implement, remember: only Ch reaponse)
+
+if not(eyediagram_wc_plot == 'not'):
+    voltage_levels = np.array([-1,1])
+    prbs_nbits = 1000
+    
+    data = np.concatenate((sdp.prbs13(1),sdp.prbs13(1)))[:prbs_nbits+1] #Max 16382
+    
+    TX = sdp.Transmitter(data, voltage_levels, nyquist_f)
+    TX.oversample(samples_per_symbol)
+    
+    
+    max_idx = np.where(ir == np.amax(ir))[0][0]
+    signal_out = 0.5*sp.signal.fftconvolve(ir,TX.signal_ideal, mode = "full")[max_idx:max_idx+(prbs_nbits+1)*samples_per_symbol]
+    
+    TX = sdp.Transmitter(data, voltage_levels, nyquist_f)
+    TX.FIR(tx_fir_tap_weights)
+    TX.oversample(samples_per_symbol)
+    
+    max_idx = np.where(ir == np.amax(ir))[0][0]
+    signal_out_ffe = 0.5*sp.signal.fftconvolve(ir,TX.signal_ideal, mode = "full")[max_idx:max_idx+(prbs_nbits+1)*samples_per_symbol]
+    
+    max_idx = np.where(h_ctle == np.amax(h_ctle))[0][0]
+    signal_out_ctle_ffe = 1.0*sp.signal.fftconvolve(h_ctle,signal_out_ffe, mode = "full")[max_idx:max_idx+(prbs_nbits+1)*samples_per_symbol]
+    
+    if eyediagram_plot == 'all':
+        RX = sdp.Receiver(signal_out, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
+        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel")
+        
+        RX = sdp.Receiver(signal_out_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
+        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE")
+        
+        RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
+        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE")
+        
+        RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
+        RX.nrz_DFE(-dfe_tap_weights)
+        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
+    elif eyediagram_plot == 'final':
+        RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
+        RX.nrz_DFE(-dfe_tap_weights)
+        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
+plt.show()
     
 #%% Eye Diagram all filters
 

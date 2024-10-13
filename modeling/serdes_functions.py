@@ -162,3 +162,45 @@ def wc_eyeheight_coeff(coeff, samples_per_symbol, n_precursors, n_postcursors):
     #print('WC eye height: '+si_format(WCEyeH))
     
     return WCEyeH
+
+
+def wc_datapattern(pulse_response, samples_per_symbol, n_precursors, n_postcursors):
+    """measures the worst case eye height using the coefficient method
+
+    Parameters
+    ----------
+    pulse_response: array
+    
+    samples_per_symbol: int
+        number of samples per UI
+        
+    n_precursors : int
+        number of UI before main cursor to measure
+        
+    n_postcursors : int
+        number of UI before after cursor to measure
+        
+    Returns
+    -------
+    wc_eyeheight : int
+        worst case eye height in volts
+
+    """
+    
+    ch1_coeff = channel_coefficients(pulse_response, samples_per_symbol, n_precursors, n_postcursors)
+    
+    pattern_zero = -1*np.sign(ch1_coeff)
+    pattern_zero[n_precursors] = -1
+    pattern_ones = -1*np.flip(pattern_zero)
+    pattern_zo = np.concatenate((pattern_zero, pattern_ones))
+    pattern = np.zeros(len(pattern_zo))
+    
+    for i in range(pattern_zo):
+        if pattern_zo[i]>0:
+            pattern[i] = 1
+        else:
+            pattern[i] = 0
+
+    
+    return pattern
+    
