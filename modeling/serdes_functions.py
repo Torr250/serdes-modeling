@@ -12,6 +12,8 @@ import scipy as sp
 #import serdes_functions as sdf
 from si_prefix import si_format
 from prettytable import PrettyTable
+import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 def channel_coefficients(pulse_response, samples_per_symbol, n_precursors, n_postcursors):
     #TODO: check for not long enough signal
@@ -195,7 +197,7 @@ def wc_datapattern(pulse_response, samples_per_symbol, n_precursors, n_postcurso
     pattern_zo = np.concatenate((pattern_zero, pattern_ones))
     pattern = np.zeros(len(pattern_zo))
     
-    for i in range(pattern_zo):
+    for i in range(len(pattern_zo)):
         if pattern_zo[i]>0:
             pattern[i] = 1
         else:
@@ -203,4 +205,62 @@ def wc_datapattern(pulse_response, samples_per_symbol, n_precursors, n_postcurso
 
     
     return pattern
+
+
+def simple_eye(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.15):
+    """Genterates simple eye diagram
+
+    Parameters
+    ----------
+    signal: array
+        signal to be plotted
+    
+    window_len: int
+        number of time steps in eye diagram x axis
+    
+    ntraces: int
+        number of traces to be plotted
+    
+    tstep: float
+        timestep of time domain signal
+    
+    title: 
+        title of the plot
+        
+    res: int, optional
+        DPI resolution of the figure
+        
+    linewidth: float, optional
+        width of lines in figure
+    """
+    offset = window_len*0.5
+    signal_crop = signal[int(offset):int(((ntraces-1)*window_len+offset))]
+    traces = np.split(signal_crop,(ntraces-1))
+
+    t = np.linspace(-(tstep*(window_len-1))/2,(tstep*(window_len-1))/2, window_len)
+    
+    t_lim = np.floor(1e12*tstep*(window_len-1)/2)+1
+    
+    csfont = {'fontname':'Arial'}
+    hfont = {'fontname':'Arial'}
+    
+    print(t_lim)
+    plt.figure(dpi=res)
+    
+    for i in range(ntraces-1):
+        plt.plot(t*1e12,np.reshape((traces[i][:]),window_len)*1e3, color = 'blue', linewidth = 1)
+    plt.title(title,**csfont, weight='bold')
+    plt.xlabel('Time (ps)',**hfont, weight='bold',fontsize=16)
+    plt.ylabel('Amplitude (mV)',**hfont, weight='bold',fontsize=16)
+    plt.xlim(-t_lim,t_lim)
+    plt.ylim(-600, 600)
+    plt.yticks(np.arange(-600, 600+1, step=200),**hfont, weight='bold',fontsize=16)
+    plt.xticks([-125, -62, 0, 62, 125],**hfont, weight='bold',fontsize=16)
+    plt.yticks(**hfont, weight='bold',fontsize=16)
+    plt.xticks(**hfont, weight='bold',fontsize=16)
+    #plt.minorticks_on()
+    #plt.set_minor_locator(MultipleLocator(2))
+    plt.grid(linestyle='--',which='major')
+    #plt.savefig('line_plot.pdf')  
+    return True
     
