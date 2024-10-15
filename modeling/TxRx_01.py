@@ -73,8 +73,8 @@ wc_eyeheight : float
 datarate = 8e9
 ir_channel_file = 'ir_B20.mat' 
 tx_ffe_taps_list = [0.0, 0.250] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
-rx_ctle_gain_list = [0,0] # Positive values only up to 6 [6,6]
-rx_dfe_taps_list = [0.0 , 0.0, 0.0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
+rx_ctle_gain_list = [3,3] # Positive values only up to 6 [6,6]
+rx_dfe_taps_list = [0.0 , 0.02, 0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 eyediagram_wc_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final or all, not
@@ -91,7 +91,7 @@ for x in range(len(tx_ffe_taps_list)):
         print('Not correct FFE values')  
   
 for x in range(len(rx_ctle_gain_list)):
-    if not( 0 <= rx_ctle_gain_list[x] <= 2 ):
+    if not( 0 <= rx_ctle_gain_list[x] <= 6 ):
         print('Not correct CTLE values')
 
 for x in range(len(rx_dfe_taps_list)):
@@ -223,13 +223,13 @@ if pulse_plot == 'all':
     pulse_fir_ctle_t =  np.arange(1,len(pulse_response_fir_ctle)+1,1)*t_d*1e9
     pulse_fir_ctle_dfe_t =  np.arange(1,len(pulse_response_fir_ctle_dfe)+1,1)*t_d*1e9
     
-    sdp.channel_coefficients(pulse_response, pulse_t*1e-9, samples_per_symbol, 2, 5)
-    sdp.channel_coefficients(pulse_response_fir, pulse_fir_t*1e-9, samples_per_symbol, 2, 5)
-    sdp.channel_coefficients(pulse_response_fir_ctle, pulse_fir_ctle_t*1e-9, samples_per_symbol, 2, 5)
-    sdp.channel_coefficients(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
+    sdf.pulse_plot(pulse_response, pulse_t*1e-9, samples_per_symbol, 2, 5)
+    sdf.pulse_plot(pulse_response_fir, pulse_fir_t*1e-9, samples_per_symbol, 2, 5)
+    sdf.pulse_plot(pulse_response_fir_ctle, pulse_fir_ctle_t*1e-9, samples_per_symbol, 2, 5)
+    sdf.pulse_plot(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
 elif pulse_plot == 'final':
     pulse_fir_ctle_dfe_t =  np.arange(1,len(pulse_response_fir_ctle_dfe)+1,1)*t_d*1e9
-    sdp.channel_coefficients(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
+    sdf.pulse_plot(pulse_response_fir_ctle_dfe, pulse_fir_ctle_dfe_t*1e-9, samples_per_symbol, 2, 5)
 
 #%% WC eye height all filters
 
