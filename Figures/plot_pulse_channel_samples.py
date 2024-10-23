@@ -29,8 +29,8 @@ pulse_ui=pulse_ui[0,:]
 
 
 
-n_precursors =  10
-n_postcursors = 60
+n_precursors =  3
+n_postcursors = 10
 
 n_cursors = n_precursors + n_postcursors + 1
 channel_coefficients = np.zeros(n_cursors)
@@ -64,7 +64,7 @@ samples_channel_sign = np.sign(samples_channel);
 fig, ax = plt.subplots()
 ax.plot(pulse_ui, pulse_channel*1e3, color = 'blue', linewidth = 3) 
 #ax.plot(pulse_ui, pulse_channel_dfe*1e3, color = 'red', linewidth = 3) 
-#ax.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, markersize=10)
+ax.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, markersize=10)
 #ax.plot(samples_ui, samples_channel_dfe*1e3, 'o', color = 'red', linewidth = 1, markersize=10)
 #ax.plot(samples_ui, samples_channel_sign*300, 'o', color = 'blue', linewidth = 1, markersize=10)
 
@@ -78,8 +78,8 @@ ax.plot(pulse_ui, pulse_channel*1e3, color = 'blue', linewidth = 3)
 ax.grid(True,linestyle='--',which='major',axis = 'y')
 ax.minorticks_on()
 
-ax.xaxis.set_major_locator(MultipleLocator(5))
-ax.xaxis.set_minor_locator(MultipleLocator(5))
+ax.xaxis.set_major_locator(MultipleLocator(1))
+ax.xaxis.set_minor_locator(MultipleLocator(1))
 ax.xaxis.set_major_formatter('{x:0.0f}')
 
 ax.yaxis.set_major_locator(MultipleLocator(50))
@@ -115,24 +115,6 @@ for cursor in range(-n_precursors,n_postcursors):
     plt.axvline(x=cursor+0.5,color = 'grey', linewidth = 0.25, linestyle='--')
 
 
-
-left, bottom, width, height = 0.43, 0.43, 0.4, 0.4
-ax2 = fig.add_axes([left, bottom, width, height])
-ax2.plot(pulse_ui, pulse_channel*1e3, 'b')
-ax2.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, markersize=10)
-ax2.set_xlabel('Time (UI)',fontsize=16,weight='bold')
-ax2.set_ylabel('Voltage (mV)',fontsize=16,weight='bold')
-#ax2.set_title('title inside 1')
-ax2.set_xlim([50, 60])
-ax2.set_ylim([-2, 2])
-ax2.grid(True,linestyle='--',which='major',axis = 'y')
-ax2.minorticks_on()
-for cursor in range(-n_precursors,n_postcursors):
-    ax2.axvline(x=cursor+0.5,color = 'grey', linewidth = 0.25, linestyle='--')
-plt.xticks(weight='bold',fontsize=16)
-plt.yticks(weight='bold',fontsize=16)
-
-
-#plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.15)
-#plt.savefig("plot_pulse_dfe.pdf")
+plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.15)
+plt.savefig("plot_pulse_samples.pdf")
 plt.show()
