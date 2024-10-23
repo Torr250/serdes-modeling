@@ -29,8 +29,8 @@ pulse_ui=pulse_ui[0,:]
 
 
 
-n_precursors = 2
-n_postcursors =6 
+n_precursors =  10
+n_postcursors = 60
 
 n_cursors = n_precursors + n_postcursors + 1
 channel_coefficients = np.zeros(n_cursors)
@@ -43,13 +43,15 @@ max_idx = np.where(pulse_channel == np.amax(pulse_channel))[0][0]
 samples_ui = np.zeros(n_cursors)
 samples_channel = np.zeros(n_cursors)
 samples_channel_dfe = np.zeros(n_cursors)
+samples_channel_sign = np.zeros(n_cursors)
 
 for cursor in range(-n_precursors,n_postcursors+1):
-    samples_ui[cursor] = pulse_ui[max_idx + cursor*samples_per_symbol]
-    samples_channel[cursor] = pulse_channel[max_idx + cursor*samples_per_symbol]
-    samples_channel_dfe[cursor] = pulse_channel_dfe[max_idx + cursor*samples_per_symbol]
+    #print(cursor+n_precursors)
+    samples_ui[cursor+n_precursors] = pulse_ui[max_idx + cursor*samples_per_symbol]
+    samples_channel[cursor+n_precursors] = pulse_channel[max_idx + cursor*samples_per_symbol]
+    samples_channel_dfe[cursor+n_precursors] = pulse_channel_dfe[max_idx + cursor*samples_per_symbol]
 
-
+samples_channel_sign = np.sign(samples_channel);
 
 #annots = loadmat('T20_AC.mat')
 #t20_ac_mag = annots['ac_mag']
@@ -61,9 +63,10 @@ for cursor in range(-n_precursors,n_postcursors+1):
 
 fig, ax = plt.subplots()
 ax.plot(pulse_ui, pulse_channel*1e3, color = 'blue', linewidth = 3) 
-ax.plot(pulse_ui, pulse_channel_dfe*1e3, color = 'red', linewidth = 3) 
-ax.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, markersize=10)
-ax.plot(samples_ui, samples_channel_dfe*1e3, 'o', color = 'red', linewidth = 1, markersize=10)
+#ax.plot(pulse_ui, pulse_channel_dfe*1e3, color = 'red', linewidth = 3) 
+#ax.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, markersize=10)
+#ax.plot(samples_ui, samples_channel_dfe*1e3, 'o', color = 'red', linewidth = 1, markersize=10)
+ax.plot(samples_ui, samples_channel_sign*300, 'o', color = 'blue', linewidth = 1, markersize=10)
 
 #ax.plot(t, c, color = 'red', linewidth = 3)
 
@@ -74,8 +77,8 @@ ax.plot(samples_ui, samples_channel_dfe*1e3, 'o', color = 'red', linewidth = 1, 
 ax.grid(True,linestyle='--',which='major',axis = 'y')
 ax.minorticks_on()
 
-ax.xaxis.set_major_locator(MultipleLocator(1))
-ax.xaxis.set_minor_locator(MultipleLocator(1))
+ax.xaxis.set_major_locator(MultipleLocator(5))
+ax.xaxis.set_minor_locator(MultipleLocator(5))
 ax.xaxis.set_major_formatter('{x:0.0f}')
 
 ax.yaxis.set_major_locator(MultipleLocator(50))
@@ -83,7 +86,7 @@ ax.yaxis.set_minor_locator(MultipleLocator(50))
 ax.yaxis.set_major_formatter('{x:1.0f}')
 
 ax.set_xlim([-n_precursors, n_postcursors])
-ax.set_ylim([-50, 250])
+#ax.set_ylim([-50, 250])
 
 
 plt.xticks(weight='bold',fontsize=16)
@@ -93,7 +96,7 @@ plt.xlabel('Time (UI)',weight='bold',fontsize=16)
 plt.ylabel('Voltage (mV)', weight='bold',fontsize=16)
 
 
-plt.legend(['No Eq','3 tap DFE'],prop = { "size": 16 ,'weight':'bold'}, loc ="upper right")
+#plt.legend(['No Eq','3 tap DFE'],prop = { "size": 16 ,'weight':'bold'}, loc ="upper right")
 
 #ax.text(60, -0.75, 'Test', color='black', weight='bold',fontsize=16, 
         #bbox=dict(facecolor='white', edgecolor='black', pad=5.0)) #round,pad=0.3
