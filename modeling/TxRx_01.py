@@ -72,9 +72,10 @@ wc_eyeheight : float
 # Known values
 datarate = 8e9
 ir_channel_file = 'ir_B20.mat' 
-tx_ffe_taps_list = [0.0, 0.250] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
-rx_ctle_gain_list = [3,3] # Positive values only up to 6 [6,6]
-rx_dfe_taps_list = [0.0 , 0.02, 0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
+#ir_channel_file = 'ir_Molex_K2.mat' 
+tx_ffe_taps_list = [0.024796,0.05226] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
+rx_ctle_gain_list = [0.0,6.0] # Positive values only up to 6 [6,6]
+rx_dfe_taps_list = [-0.1,0.005225,0.012315] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 eyediagram_wc_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final or all, not

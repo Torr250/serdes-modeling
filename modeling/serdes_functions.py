@@ -264,13 +264,13 @@ def simple_eye(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.1
     #ax.xaxis.set_minor_locator(MultipleLocator(0.25))
     #ax.xaxis.set_major_formatter('{x:1.1f}')
     
-    ax.yaxis.set_major_locator(MultipleLocator(250))
-    ax.yaxis.set_minor_locator(MultipleLocator(250))
+    ax.yaxis.set_major_locator(MultipleLocator(300))
+    ax.yaxis.set_minor_locator(MultipleLocator(300))
     ax.yaxis.set_major_formatter('{x:1.0f}')
     
     #ax.set_xlim([-1, 1])
     ax.set_xlim([-t_lim, t_lim])
-    ax.set_ylim([-500, 500])
+    ax.set_ylim([-600, 600])
     
     plt.xticks(weight='bold',fontsize=20)
     plt.yticks(weight='bold',fontsize=20)
@@ -282,7 +282,7 @@ def simple_eye(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.1
     #plt.savefig('line_plot.pdf')  
     return True
     
-def simple_eye(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.15):
+def simple_eye1(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.15):
     """Genterates simple eye diagram
 
     Parameters
@@ -444,7 +444,7 @@ def pulse_plot(pulse_response, t, samples_per_symbol, n_precursors, n_postcursor
     ax.yaxis.set_major_formatter('{x:1.0f}')
     
     ax.set_xlim([-n_precursors, n_postcursors])
-    ax.set_ylim([-50, 250])
+    ax.set_ylim([-100, 400])
     
     #plt.legend()
     
