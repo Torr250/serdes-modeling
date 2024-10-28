@@ -71,11 +71,12 @@ wc_eyeheight : float
 """
 # Known values
 datarate = 8e9
-ir_channel_file = 'ir_B20.mat' 
-#ir_channel_file = 'ir_Molex_K2.mat' 
-tx_ffe_taps_list = [0.024796,0.05226] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
-rx_ctle_gain_list = [0.0,6.0] # Positive values only up to 6 [6,6]
-rx_dfe_taps_list = [-0.1,0.005225,0.012315] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
+#ir_channel_file = 'ir_B12.mat' 
+#ir_channel_file = 'ir_B20.mat' 
+ir_channel_file = 'ir_Molex_K2.mat' 
+tx_ffe_taps_list = [0.0,0.067599] #PCIe P0 [0.000, 0.250], Autocalculates main tap, positive values only max value 0.4
+rx_ctle_gain_list = [0.148336,6.0] # Positive values only up to 6 [6,6]
+rx_dfe_taps_list = [-0.1,-0.024282,0] #Random Taps, [0.033 , 0.052, 0.015] positive and negative values up to 0.5
 eyediagram_plot = 'all' # final, all, not
 eyediagram_wc_plot = 'all' # final, all, not
 wc_eyeh_print = 'all' #final or all, not
@@ -349,9 +350,9 @@ if not(eyediagram_plot == 'not'):
         
         RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
         RX.nrz_DFE(-dfe_tap_weights)
-        sdf.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
+        sdf.simple_eye1(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
     elif eyediagram_plot == 'final':
         RX = sdp.Receiver(signal_out_ctle_ffe, samples_per_symbol, nyquist_f, voltage_levels, shift = True, main_cursor = main_cursor)
         RX.nrz_DFE(-dfe_tap_weights)
-        sdp.simple_eye(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
+        sdf.simple_eye1(RX.signal, samples_per_symbol*2, np.int16(prbs_nbits/2), TX.UI/TX.samples_per_symbol, "Channel + FFE + CTLE + DFE")
 plt.show()

@@ -340,13 +340,13 @@ def simple_eye1(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.
     ax.xaxis.set_minor_locator(MultipleLocator(0.25))
     ax.xaxis.set_major_formatter('{x:1.1f}')
     
-    ax.yaxis.set_major_locator(MultipleLocator(250))
-    ax.yaxis.set_minor_locator(MultipleLocator(250))
+    ax.yaxis.set_major_locator(MultipleLocator(300))
+    ax.yaxis.set_minor_locator(MultipleLocator(300))
     ax.yaxis.set_major_formatter('{x:1.0f}')
     
     ax.set_xlim([-1, 1])
     #ax.set_xlim([-t_lim, t_lim])
-    ax.set_ylim([-500, 500])
+    ax.set_ylim([-600, 600])
     
     plt.xticks(weight='bold',fontsize=20)
     plt.yticks(weight='bold',fontsize=20)
@@ -357,7 +357,7 @@ def simple_eye1(signal, window_len, ntraces, tstep, title, res=600, linewidth=0.
 
 
     plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
-    plt.savefig('eye_diagram_open.pdf',dpi=400)  
+    plt.savefig('eye_diagram_Molex_Eq.pdf',dpi=400)  
     plt.show()
     return True
 
