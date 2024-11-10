@@ -68,6 +68,8 @@ ax.plot(samples_ui, samples_channel*1e3, 'o', color = 'blue', linewidth = 1, mar
 #ax.plot(samples_ui, samples_channel_dfe*1e3, 'o', color = 'red', linewidth = 1, markersize=10)
 #ax.plot(samples_ui, samples_channel_sign*300, 'o', color = 'blue', linewidth = 1, markersize=10)
 
+plt.legend(['Pulse Response','Samples y[k]'],prop = { "size": 16 ,'weight':'bold'}, loc ="upper right")
+
 
 #ax.plot(t, c, color = 'red', linewidth = 3)
 
@@ -116,5 +118,5 @@ for cursor in range(-n_precursors,n_postcursors):
 
 
 plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.15)
-plt.savefig("plot_pulse_samples.pdf")
+plt.savefig("plot_pulse_samples2.pdf")
 plt.show()
