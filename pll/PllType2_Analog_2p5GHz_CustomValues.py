@@ -18,7 +18,7 @@ import types
 Fref = 125e6  # Reference Frequency
 N = 20  # Multiplication Factor
 Rz = 8e3  # Zero Resistor Value
-Icp = 50e-6  # Charge Pump current
+Icp = 90e-6  # Charge Pump current
 tau = 120e-12  # Charge Pump Pulse
 KVCO_HzV = 1.8e9  # VCO Gain in Hz/V
 Cunit = 1e-12  # Unitary Capacitor for Capacitor ratio
@@ -241,7 +241,7 @@ plt.show()
 
 # Noise Sources from data
 #Input Reference Phase Noise
-tmp = sp.io.loadmat('Si590_CML_156p25MHz_dbcHz.mat')
+tmp = sp.io.loadmat('Si590_CMOS_125MHz_dbcHz.mat')
 raw_freq = tmp['frequencyHz'].squeeze()  # Frequency offset vector
 raw_phase_noise = tmp['noisedBcHz'].squeeze()  # Phase noise vector
 # Interpolate to PLL frequency vector
