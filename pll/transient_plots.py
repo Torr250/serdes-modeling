@@ -123,9 +123,9 @@ plt.show()
 spectrum_data_ff = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_ff})
 spectrum_data_tt = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_tt})
 spectrum_data_ss = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_ss})
-spectrum_data_ff.to_csv('spectrum_ff.csv', index=False)
-spectrum_data_tt.to_csv('spectrum_tt.csv', index=False)
-spectrum_data_ss.to_csv('spectrum_ss.csv', index=False)
+spectrum_data_ff.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ff.csv', index=False)
+spectrum_data_tt.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_tt.csv', index=False)
+spectrum_data_ss.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ss.csv', index=False)
 print("Spectrum data saved to spectrum_ff.csv, spectrum_tt.csv, and spectrum_ss.csv")
 
 

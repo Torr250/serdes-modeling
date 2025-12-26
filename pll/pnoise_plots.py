@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import scipy as sp
 import pandas as pd
 
-csv_path = 'tran_pnoise_ss_ff_tt_pex.csv'
+csv_path = 'C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/tran_pnoise_ss_ff_tt_pex.csv'
 df = pd.read_csv(csv_path, header=None, names=['frequency_ff', 'pnoise_ff', 'frequency_tt', 'pnoise_tt', 'frequency_ss', 'pnoise_ss'])
 
 # Replace whitespace-only strings with NaN

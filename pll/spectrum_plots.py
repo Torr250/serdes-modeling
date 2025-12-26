@@ -5,9 +5,9 @@ import scipy as sp
 import pandas as pd
 
 # Load spectrum data from CSV files
-spectrum_ff = pd.read_csv('spectrum_ff.csv')
-spectrum_tt = pd.read_csv('spectrum_tt.csv')
-spectrum_ss = pd.read_csv('spectrum_ss.csv')
+spectrum_ff = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ff.csv')
+spectrum_tt = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_tt.csv')
+spectrum_ss = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ss.csv')
 frequencies = spectrum_ff['Frequency (Hz)'].values
 magnitude_ff = spectrum_ff['Magnitude (dB)'].values
 magnitude_tt = spectrum_tt['Magnitude (dB)'].values
