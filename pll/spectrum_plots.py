@@ -17,16 +17,16 @@ fref = 150e6  # Reference frequency
 
 # Set font properties
 plt.rcParams['font.family'] = 'Arial'
-plt.rcParams['font.size'] = 16
+plt.rcParams['font.size'] = 14
 plt.rcParams['font.weight'] = 'bold'
 # Plot the spectra
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(7, 5))
 plt.minorticks_on()
-plt.plot(frequencies*1e-9, magnitude_ff, label='FF Spectrum', linewidth=3, color='blue')
-plt.plot(frequencies*1e-9, magnitude_ss, label='SS Spectrum', linewidth=3, color='red')
-plt.plot(frequencies*1e-9, magnitude_tt, label='TT Spectrum', linewidth=3, color='green')
-plt.xlabel('Frequency (Hz)', fontweight='bold')
-plt.ylabel('Magnitude', fontweight='bold')
+plt.plot(frequencies*1e-9, magnitude_ff, label='FF 1.1V -40°C', linewidth=2, color='blue')
+plt.plot(frequencies*1e-9, magnitude_ss, label='SS 0.9V 125°C', linewidth=2, color='red')
+plt.plot(frequencies*1e-9, magnitude_tt, label='TT 1.0V 60°C', linewidth=2, color='green')
+plt.xlabel('Frequency (GHz)', fontweight='bold')
+plt.ylabel('Magnitude (dB)', fontweight='bold')
 plt.xlim((fosc - fref)*1e-9, (fosc + fref)*1e-9)  # Limit x-axis to fosc ± fref
 plt.ylim(-100, 10)  # Limit y-axis for better visibility
 plt.legend()

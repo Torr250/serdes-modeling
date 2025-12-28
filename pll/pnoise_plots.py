@@ -33,24 +33,29 @@ print(f"pnoise_tt length: {len(pn_tt)}")
 print(f"frequency_ss length: {len(f_ss)}")
 print(f"pnoise_ss length: {len(pn_ss)}")
 
+#Apply median filter to smooth the phase noise data
+pn_ff = sp.signal.medfilt(pn_ff, kernel_size=7)
+pn_tt = sp.signal.medfilt(pn_tt, kernel_size=7)
+pn_ss = sp.signal.medfilt(pn_ss, kernel_size=7)
+
 # Plot Phase Noise for the three process corners
 # Set font properties
 plt.rcParams['font.family'] = 'Arial'
-plt.rcParams['font.size'] = 16
+plt.rcParams['font.size'] = 14
 plt.rcParams['font.weight'] = 'bold'
 # Plot the phase noise
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(7, 5))
 plt.minorticks_on()
-plt.plot(f_ff, pn_ff, label='FF Phase Noise', linewidth=3, color='blue')
-plt.plot(f_ss, pn_ss, label='SS Phase Noise', linewidth=3, color='red')
-plt.plot(f_tt, pn_tt, label='TT Phase Noise', linewidth=3, color='green')
+plt.plot(f_ff, pn_ff, label='FF 1.1V -40°C', linewidth=3, color='blue')
+plt.plot(f_ss, pn_ss, label='SS 0.9V 125°C', linewidth=3, color='red')
+plt.plot(f_tt, pn_tt, label='TT 1.0V 60°C', linewidth=3, color='green')
 plt.xlabel('Frequency (Hz)', fontweight='bold')
 plt.ylabel('Phase Noise (dBc/Hz)', fontweight='bold')
-plt.xlim(min(f_ff[1], f_ss[1], f_tt[1]), max(f_ff[-1], f_ss[-1], f_tt[-1]))  # Limit x-axis from 1 kHz to 1 GHz
-plt.ylim(-180, -80)  # Limit y-axis for better visibility
+plt.xlim(min(f_ff[1], f_ss[1], f_tt[1]), 1e9)  # Limit x-axis from 1 kHz to 1 GHz
+plt.ylim(-160, -95)  # Limit y-axis for better visibility
 plt.xscale('log')
 plt.yscale('linear')
-plt.legend()
+plt.legend(loc='lower left')
 plt.grid(which='both', linestyle='--', linewidth=0.5)
 plt.tight_layout()
 plt.savefig('pnoise_ff_ss_tt.pdf', dpi=400)
