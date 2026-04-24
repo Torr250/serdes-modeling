@@ -5,9 +5,9 @@ import scipy as sp
 import pandas as pd
 
 # Load spectrum data from CSV files
-spectrum_ff = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ff.csv')
-spectrum_tt = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_tt.csv')
-spectrum_ss = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ss.csv')
+spectrum_ff = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_ff.csv')
+spectrum_tt = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_tt.csv')
+spectrum_ss = pd.read_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_ss.csv')
 frequencies = spectrum_ff['Frequency (Hz)'].values
 magnitude_ff = spectrum_ff['Magnitude (dB)'].values
 magnitude_tt = spectrum_tt['Magnitude (dB)'].values
@@ -23,8 +23,8 @@ plt.rcParams['font.weight'] = 'bold'
 plt.figure(figsize=(7, 5))
 plt.minorticks_on()
 plt.plot(frequencies*1e-9, magnitude_ff, label='FF 1.1V -40°C', linewidth=2, color='blue')
-plt.plot(frequencies*1e-9, magnitude_ss, label='SS 0.9V 125°C', linewidth=2, color='red')
 plt.plot(frequencies*1e-9, magnitude_tt, label='TT 1.0V 60°C', linewidth=2, color='green')
+plt.plot(frequencies*1e-9, magnitude_ss, label='SS 0.9V 125°C', linewidth=2, color='red')
 plt.xlabel('Frequency (GHz)', fontweight='bold')
 plt.ylabel('Magnitude (dB)', fontweight='bold')
 plt.xlim((fosc - fref)*1e-9, (fosc + fref)*1e-9)  # Limit x-axis to fosc ± fref
@@ -32,6 +32,6 @@ plt.ylim(-100, 10)  # Limit y-axis for better visibility
 plt.legend()
 plt.grid(which='both', linestyle='--', linewidth=0.5)
 plt.tight_layout()
-plt.savefig('spectrum_ff_ss_tt.pdf', dpi=400)
+plt.savefig('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_ff_ss_tt.pdf', dpi=400)
 plt.show()
 

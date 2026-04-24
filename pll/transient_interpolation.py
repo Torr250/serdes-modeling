@@ -8,7 +8,7 @@ fosc = 2.5e9  # Oscillation frequency of the PLL in Hz
 fref = 150e6  # Reference frequency in Hz
 
 # Read the CSV file with specified column names
-csv_path = 'C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/tran_clk_ss_ff_tt_pex.csv'
+csv_path = 'C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/tran_clk_ss_ff_tt_pex.csv'
 df = pd.read_csv(csv_path, header=None, names=['time_ff', 'voltage_ff', 'time_tt', 'voltage_tt', 'time_ss', 'voltage_ss'])
 
 # Replace whitespace-only strings with NaN
@@ -81,7 +81,8 @@ print(f"interp_v_ff length: {len(interp_v_ff)}")
 print(f"interp_v_tt length: {len(interp_v_tt)}")
 print(f"interp_v_ss length: {len(interp_v_ss)}")
 
-# Calculate the FFT of each interpolated signal
+
+# Calculate the FFT of each interpolated signal within the specified time window
 fft_v_ff = np.fft.fft(interp_v_ff)
 fft_v_tt = np.fft.fft(interp_v_tt)
 fft_v_ss = np.fft.fft(interp_v_ss)
@@ -123,9 +124,9 @@ plt.show()
 spectrum_data_ff = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_ff})
 spectrum_data_tt = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_tt})
 spectrum_data_ss = pd.DataFrame({'Frequency (Hz)': positive_freqs, 'Magnitude (dB)': magnitude_ss})
-spectrum_data_ff.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ff.csv', index=False)
-spectrum_data_tt.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_tt.csv', index=False)
-spectrum_data_ss.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout/spectrum_ss.csv', index=False)
+spectrum_data_ff.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_ff.csv', index=False)
+spectrum_data_tt.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_tt.csv', index=False)
+spectrum_data_ss.to_csv('C:/Users/adant/Mi unidad (atorralba@inaoe.mx)/Reportes/EDIESCA 2025/PostLayout2/spectrum_ss.csv', index=False)
 print("Spectrum data saved to spectrum_ff.csv, spectrum_tt.csv, and spectrum_ss.csv")
 
 

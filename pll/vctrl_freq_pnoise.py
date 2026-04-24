@@ -110,6 +110,6 @@ plt.xlim([np.min(vctrl*1e3), np.max(vctrl*1e3)])
 plt.legend()
 plt.grid(which='both', linestyle='--', linewidth=0.5)
 plt.tight_layout()
-plt.savefig('vco_freq_pn_tt.pdf', dpi=400)
+#plt.savefig('vco_freq_pn_tt.pdf', dpi=400)
 plt.show()
 

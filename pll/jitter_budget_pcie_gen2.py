@@ -9,7 +9,7 @@ import numpy as np
 # --- Parameters ---
 bit_rate = 5e9               # 5 Gbps
 UI = 1.0 / bit_rate         # UI in seconds (200 ps)
-TJ_target_UI = 0.40         # target total TJ in UI (peak-to-peak)
+TJ_target_UI = 0.30         # target total TJ in UI (peak-to-peak)
 TJ_target = TJ_target_UI * UI
 BER = 1e-12
 # For BER=1e-12 the Gaussian Q ~ 7.034 (precomputed)
@@ -28,8 +28,8 @@ spurs = [(-60, 1e6), (-70, 5e6)]   # example tones (dBc, Hz)
 # RJ components (example guesses) in ps RMS (will be combined by RSS)
 # These are illustrative and can be adjusted.
 rj_components_ps = {
-    'PLL/VCO': 2.5,
-    'Tx_driver': 2.5,
+    'PLL/VCO': 1.5,
+    'Tx_driver': 1.5,
     'Channel/Receiver': 1.5,
 }
 
